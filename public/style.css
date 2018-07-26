@@ -1,0 +1,16 @@
+body {
+    margin: 0;
+}
+
+html{
+    background-color: #f2f2f2;
+}
+
+* {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    /*font-weight: normal;*/
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 30px #FFFFFF inset;
+}
