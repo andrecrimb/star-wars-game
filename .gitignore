@@ -24,3 +24,8 @@ bundle.js
 *.iml
 /.idea
 /nbproject/private/
+
+
+# API Keys
+
+/src/constants/appK.js
