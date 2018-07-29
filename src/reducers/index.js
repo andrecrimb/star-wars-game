@@ -4,6 +4,7 @@ import toastAlertReducer from './toastAlertReducer'
 import charactersReducer from './charactersReducer'
 import systemSettingsReducer from './systemSettingsReducer'
 import filmsReducer from './filmsReducer'
+import gameSettingsReducer from './gameSettingsReducer'
 
 const rootReducer = combineReducers({
     form: formReducer,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
     characters: charactersReducer,
     films: filmsReducer,
     systemSettings: systemSettingsReducer,
+    gameSettings: gameSettingsReducer,
 });
 
 export default rootReducer;

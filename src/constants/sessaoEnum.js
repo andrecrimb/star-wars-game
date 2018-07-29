@@ -1,8 +1,4 @@
 const SESSAO_ENUM = {
-    CIDADES: 'cidades',
-    ESTADOS: 'estados',
-    TIPOS_USUARIOS: 'tipos-usuarios-amaxi',
-    USER: 'user-amaxi',
-    TOKEN: 'token-amaxi'
+    GAME_SCORE: 'STAR_WARS_GAME_SCORES'
 };
 export {SESSAO_ENUM}

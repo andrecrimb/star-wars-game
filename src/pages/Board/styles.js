@@ -16,9 +16,10 @@ export const Styles = theme => ({
         overflowX: 'auto',
     },
     fullBodyContainer: {
-        marginTop: "120px",
+        marginTop: "70px",
         paddingBottom: '100px',
         overflow: "auto",
-        width: '100%'
+        width: '100%',
+        paddingTop: '20px'
     }
 });

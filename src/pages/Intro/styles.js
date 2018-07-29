@@ -1,10 +1,10 @@
-export const Styles = {
+export const Styles = theme => ({
     loginIndex: {
         backgroundSize: 'cover',
-        backgroundImage: 'url("https://i.pinimg.com/originals/e1/b7/59/e1b75944d113a74d7f8b1b7898e1c97f.png")',
+        backgroundImage: 'url("images/background.jpg")',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
-        position: 'absolute',
+        position: 'fixed',
         left: 0,
         right: 0,
         top: 0,
@@ -25,7 +25,7 @@ export const Styles = {
         padding: '22px 0 0 0'
     },
     imageHeader: {
-        width: '200px',
+        width: '170px',
     },
     playButton: {
         width: '100%',
@@ -33,5 +33,26 @@ export const Styles = {
     },
     actionContainer: {
       textAlign: 'center'
+    },
+    flatBtn: {
+        color: '#868686'
+    },
+    scoreIcon: {
+        marginRight: '16px',
+        marginTop: '-4px'
+    },
+    rulesContainer: {
+        textAlign: 'left',
+        marginBottom: 20
+    },
+    root: {
+        maxHeight: '500px',
+        overflow: 'auto'
+    },
+    titleIntro: {
+        textAlign: 'center',
+        lineHeight: '150%',
+        fontWeight: '400',
+        marginTop: 0
     }
-};
+});

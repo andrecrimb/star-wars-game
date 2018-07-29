@@ -6,7 +6,7 @@ import {
     LinearProgress
 } from '@material-ui/core';
 
-class LoadingSubmit extends Component {
+class LoadingTop extends Component {
     render() {
         const {classes, color, display} = this.props;
 
@@ -21,4 +21,4 @@ class LoadingSubmit extends Component {
     }
 }
 
-export default withStyles(Styles, {withTheme: true})(LoadingSubmit);
+export default withStyles(Styles, {withTheme: true})(LoadingTop);
