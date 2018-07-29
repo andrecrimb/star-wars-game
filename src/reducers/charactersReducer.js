@@ -7,7 +7,8 @@ const initialCharactersInteracted = {
     points: 0,
     homeworld: '',
     species: [],
-    vehicles: []
+    vehicles: [],
+    viewed: false
 };
 
 const initial = {

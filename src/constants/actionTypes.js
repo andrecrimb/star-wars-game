@@ -21,6 +21,13 @@ export const ACTION_TYPES = {
             FAILURE: 'CHARACTERS_INDEX_FAILURE',
         },
     },
+    CHARACTERS_IMAGES: {
+        INDEX: {
+            REQUEST: 'CHARACTERS_IMAGES_INDEX_REQUEST',
+            SUCCESS: 'CHARACTERS_IMAGES_INDEX_SUCCESS',
+            FAILURE: 'CHARACTERS_IMAGES_INDEX_FAILURE',
+        },
+    },
     FILMS: {
         INDEX: {
             REQUEST: 'FILMS_INDEX_REQUEST',

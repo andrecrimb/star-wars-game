@@ -68,7 +68,7 @@ class EndQuizModal extends Component {
         let finalScore = 0;
         if (gameCompleted) {
             _.map(charactersInteracted, character => {
-                finalScore += character.points
+                finalScore += character.points || 0
             });
         }
 

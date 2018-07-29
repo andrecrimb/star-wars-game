@@ -92,6 +92,7 @@ class CharacterDetailsModal extends Component {
         const {
             classes,
             modalOpen,
+            characterImage,
             characterSelected,
         } = this.props;
         return (
@@ -106,7 +107,7 @@ class CharacterDetailsModal extends Component {
                     <div>
                         <div className={classes.sectionInner}>
                             <div className={classes.characterImage}
-                                 style={{background: `url(${'http://www.gnellis.com/wp-content/uploads/2017/12/Luke-Skywalker-black-and-white-jacket.jpg?x87531'}) top center`}}>
+                                 style={{background: `url(${characterImage}) top center`}}>
                             </div>
                             <div className={classes.sectionDetails}>
                                 <h3 className={classes.sectionDetailsH3}>
@@ -153,6 +154,7 @@ class CharacterDetailsModal extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        characterImage: state.charactersImages[state.characters.charactersSelected] ? state.charactersImages[state.characters.charactersSelected] : '',
         characterSelected: state.characters.charactersSelected ? state.characters.charactersList[state.characters.charactersSelected] : {},
         characterInteracted: state.characters.charactersInteracted ? state.characters.charactersInteracted[state.characters.charactersSelected] : {},
         films: state.films

@@ -1,7 +1,8 @@
 import {ACTION_TYPES} from "../constants";
 import {
     fetchCharacters as fetchCharactersApi,
-    fetchFromStarWarsApiUrl
+    fetchFromStarWarsApiUrl,
+    fetchImageFromGoogle
 } from '../services'
 import {openToastAlert} from "./toastActions";
 import _ from 'lodash'
@@ -9,7 +10,9 @@ import _ from 'lodash'
 export const fetchCharacters = (callback) => {
     return (dispatch, getValues) => {
 
-        const {characters: {paging}} = getValues();
+        const {characters: {paging}, charactersImages} = getValues();
+        let imagesPromiseArr = [];
+        let newImages = {};
 
         const params = {
             page: paging.page,
@@ -26,16 +29,37 @@ export const fetchCharacters = (callback) => {
         });
 
         fetchCharactersApi(params)
-            .then(result => {
-                dispatch({
-                    type: ACTION_TYPES.CHARACTERS.INDEX.SUCCESS,
-                    payload: {...result}
+            .then(response => {
+                _.map(response.data.results, characterResponse => {
+                    if (_.isEmpty(charactersImages) || _.isEmpty(charactersImages[characterResponse.name])) {
+                        const fetchCharacterImage = fetchImageFromGoogle(characterResponse.name)
+                            .then(images => {
+                                newImages = {
+                                    ...newImages,
+                                    [characterResponse.name]: images[1].url
+                                }
+                            });
+                        imagesPromiseArr = [...imagesPromiseArr, fetchCharacterImage]
+                    }
                 });
-                dispatch({
-                    type: ACTION_TYPES.LOADING,
-                    payload: false
-                });
-                callback()
+
+                Promise.all(imagesPromiseArr)
+                    .then(() => {
+                        dispatch({
+                            type: ACTION_TYPES.LOADING,
+                            payload: false
+                        });
+                        dispatch({
+                            type: ACTION_TYPES.CHARACTERS_IMAGES.INDEX.SUCCESS,
+                            payload: {...newImages}
+                        });
+                        dispatch({
+                            type: ACTION_TYPES.CHARACTERS.INDEX.SUCCESS,
+                            payload: {...response}
+                        });
+                        callback()
+                    });
+
             })
             .catch(() => {
                 dispatch({
@@ -79,7 +103,7 @@ export const characterInteracted = (characterIndex) => {
             ...charactersInteracted[characterIndex],
             name: charactersList[characterIndex].name,
             answer: '',
-            points: 0,
+            viewed: true,
         };
 
         if (_.isEmpty(charactersInteracted[characterIndex]) || _.isEmpty(charactersInteracted[characterIndex].homeworld)) {
@@ -101,7 +125,6 @@ export const characterInteracted = (characterIndex) => {
             const speciesPromise = _.map(charactersList[characterIndex].species, specieUrl => {
                 return fetchFromStarWarsApiUrl(specieUrl)
                     .then((specie) => {
-                        console.log('-->',specie.data.name)
                         newCharacter = {
                             ...newCharacter,
                             species: [...newCharacter.species, specie.data.name]
@@ -119,8 +142,6 @@ export const characterInteracted = (characterIndex) => {
             const vehiclesPromise = _.map(charactersList[characterIndex].vehicles, vehicleUrl => {
                 return fetchFromStarWarsApiUrl(vehicleUrl)
                     .then((vehicle) => {
-                        console.log('-->',vehicle.data.name)
-
                         newCharacter = {
                             ...newCharacter,
                             vehicles: [...newCharacter.vehicles, vehicle.data.name]
@@ -130,26 +151,24 @@ export const characterInteracted = (characterIndex) => {
             promiseArr = [...promiseArr, ...vehiclesPromise]
         }
 
-        if (!_.isEmpty(promiseArr)) {
-            Promise.all(promiseArr)
-                .then(() => {
-                    dispatch({
-                        type: ACTION_TYPES.CHARACTERS.INTERACTED,
-                        payload: {
-                            [charactersList[characterIndex].name]: {
-                                ...newCharacter
-                            }
+        Promise.all(promiseArr)
+            .then(() => {
+                dispatch({
+                    type: ACTION_TYPES.CHARACTERS.INTERACTED,
+                    payload: {
+                        [charactersList[characterIndex].name]: {
+                            ...newCharacter
                         }
-                    })
+                    }
                 })
-                .catch(() => {
-                    dispatch({
-                        type: ACTION_TYPES.LOADING,
-                        payload: false
-                    });
-                    dispatch(openToastAlert('Ops... something went wrong fetching the deatils of this character'))
+            })
+            .catch(() => {
+                dispatch({
+                    type: ACTION_TYPES.LOADING,
+                    payload: false
                 });
-        }
+                dispatch(openToastAlert('Ops... something went wrong fetching the deatils of this character'))
+            });
     };
 };
 
@@ -160,17 +179,29 @@ export const characterAnswered = (realName, answeredName, characterIndex, answer
         } = getValues();
 
         let character = {
+            ...charactersInteracted[characterIndex],
             name: realName,
             answer: answeredName,
             points: answerCorrect ? 5 : 0
         };
 
-        if (_.isEmpty(charactersInteracted[characterIndex]) && answerCorrect) {
-            character = {
-                ...character,
-                points: 10,
+        if (_.isEmpty(charactersInteracted[characterIndex])) {
+            if (answerCorrect) {
+                character = {
+                    ...character,
+                    points: 10,
+                }
+            }
+        } else {
+            if (!character.viewed && answerCorrect) {
+                character = {
+                    ...character,
+                    points: 10,
+                }
             }
         }
+
+        // console.log(answerCorrect, character);
 
         dispatch({
             type: ACTION_TYPES.CHARACTERS.INTERACTED,
@@ -191,6 +222,7 @@ export const clearAllAnswers = () => {
         let charactersClean = _.map(charactersInteracted, characterItem => ({
             ...characterItem,
             answer: '',
+            viewed: false,
             points: 0
         }));
 

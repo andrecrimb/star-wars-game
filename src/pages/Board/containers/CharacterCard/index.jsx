@@ -103,13 +103,14 @@ class CharacterCard extends Component {
             characterIndex,
             characterInteractedAction,
             selectCharacters,
+            characterImage,
             onClickItem
         } = this.props;
 
         return (
             <Grid item sm={4} xs={12} key={characterIndex}>
                 <div className={classes.container}
-                     style={{background: `url(${'http://www.gnellis.com/wp-content/uploads/2017/12/Luke-Skywalker-black-and-white-jacket.jpg?x87531'}) top center`}}>
+                     style={{background: `url(${characterImage}) top center`}}>
                     <Button
                         onClick={() => {
                             selectCharacters(characterIndex);
@@ -145,7 +146,8 @@ class CharacterCard extends Component {
 const mapStateToProps = (state, ownProps) => {
     return {
         characters: state.characters,
-        characterInteracted: state.characters.charactersInteracted[ownProps.characterIndex]
+        characterInteracted: state.characters.charactersInteracted[ownProps.characterIndex],
+        characterImage: state.charactersImages[ownProps.characterIndex] ? state.charactersImages[ownProps.characterIndex] : ''
     }
 };
 
